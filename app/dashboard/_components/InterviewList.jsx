@@ -23,7 +23,7 @@ function InterviewList() {
     const GetInterviewList=async()=>{
         const result=await db.select()
         .from(MockInterview)
-        .where(eq(MockInterview.createdBy,user?.primaryEmailAddress))
+        .where(eq(MockInterview?.createdBy,user?.primaryEmailAddress.emailAddress))
         .orderBy(desc(MockInterview.id))
 
         setinterviewList(result)
