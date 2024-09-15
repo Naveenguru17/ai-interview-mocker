@@ -66,12 +66,38 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        scroll:"scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+}
+
+function addVariablesForColors({ addBase, theme }) {
+  const colors = theme("colors");
+  const newVars = {};
+
+  // Manually flatten the color object and create CSS variables
+  for (const [color, value] of Object.entries(colors)) {
+    if (typeof value === 'string') {
+      newVars[`--${color}`] = value;
+    } else if (typeof value === 'object') {
+      for (const [shade, hex] of Object.entries(value)) {
+        newVars[`--${color}-${shade}`] = hex;
+      }
+    }
+  }
+
+  addBase({
+    ":root": newVars,
+  });
 }
